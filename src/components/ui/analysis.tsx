@@ -1,10 +1,17 @@
 import React, {useEffect, useState} from "react";
+import Swal from 'sweetalert2'
+
 
 interface AnalysisProps {
     code?: string
 }
+type swalProps ={
+    title: string;
+    icon: string;
+    text: string;
+    timer: string;
 
-
+}
 
 const Analysis = ({code}: AnalysisProps) => {
     const[message,setMessage]=useState<string>("")
@@ -32,22 +39,39 @@ const Analysis = ({code}: AnalysisProps) => {
                 }
 
             }else{
+                Swal.fire<swalProps>({
+                    title: "Server response error",
+                    icon: "error",
+                    text: "error fetching data"
+                }).then(r  =>r.dismiss)
                 setMessage("server response Error")
             }
 
         }catch (error) {
+            Swal.fire({
+                title: "Error fetching data",
+                icon: "error",
+                text: "error fetching data"
+            }).then(r  =>r.dismiss)
             setMessage(""+error)
         }
     }
+    function formatApiResponse(apiResponse: string | undefined) {
+        if (!apiResponse) {
+            return "Invalid API response.";
+        }
+        const regex = /\*\*(.*?)\*\*/g; // Matches anything between ** and **
+        return apiResponse.replace(regex, "/n");
+
+    }
+
     return (
-        <div className={"flex flex-col mt-4 leading-7 items-center w-8/12 leading-8"}>
+        <div className={"response__container flex flex-col mt-4 leading-7 items-center w-8/12 leading-8"}>
             <h2 className={"font-bold text-2xl text-black"}>Codey&#39;s analysis Details</h2>
             <p>This is the result of the analysis</p>
             {message&&<p className={"font-bold text-red-500 "}>{message}</p>}
             <div className={"p-4 flex flex-col"}>
-                <p>{analysisResponse?.replace(/\\n/g, '\n')
-                    .replace(/\\u003c/g, '<')
-                    .replace(/\\u003e/g, '>')}</p>
+                <div className={"[&>*]:leading-7"}>{formatApiResponse(analysisResponse)}</div>
             </div>
         </div>
     )
