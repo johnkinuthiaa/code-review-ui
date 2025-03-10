@@ -18,7 +18,6 @@ export default function Home() {
             setTheme("light")
         }
     }
-
   return (
       <div className={`w-[100%] overflow-scroll scroll-smooth m-[0 auto] flex flex-col items-center justify-center ${theme==="light"?"bg-white text-black":"bg-black text-white"}`}>
         <h1 className={"font-extrabold text-4xl lg:mt-10 sm:mt-4 md:mt-4 mb-2 "}>Code Analysis system</h1>
